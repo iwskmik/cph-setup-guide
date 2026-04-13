@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>静止画くん - 動画生成セットアップガイド</title>
+    <style>
+        :root {
+            --bg: #fafafa;
+            --card: #ffffff;
+            --text: #1a1a1a;
+            --muted: #6b7280;
+            --border: #e5e7eb;
+            --accent: #2563eb;
+            --accent-light: #eff6ff;
+            --code-bg: #1e293b;
+            --code-text: #e2e8f0;
+            --success: #059669;
+            --warning: #d97706;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Hiragino Sans", "Noto Sans JP", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.8;
+        }
+        .container { max-width: 780px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+        header {
+            text-align: center;
+            padding: 3rem 0 2rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2rem;
+        }
+        header h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.5rem; }
+        header p { color: var(--muted); font-size: 0.95rem; }
+        .badge {
+            display: inline-block;
+            background: var(--accent-light);
+            color: var(--accent);
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.2rem 0.6rem;
+            border-radius: 9999px;
+            margin-top: 0.5rem;
+        }
+        h2 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin: 2.5rem 0 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        h2 .num {
+            background: var(--accent);
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+        h3 { font-size: 1.05rem; font-weight: 600; margin: 1.5rem 0 0.5rem; color: var(--text); }
+        p { margin-bottom: 0.8rem; font-size: 0.95rem; }
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.2rem 1.5rem;
+            margin: 1rem 0;
+        }
+        .prereq {
+            background: var(--accent-light);
+            border: 1px solid #bfdbfe;
+            border-radius: 12px;
+            padding: 1.2rem 1.5rem;
+            margin: 1rem 0;
+        }
+        .prereq h3 { margin-top: 0; color: var(--accent); }
+        .warn {
+            background: #fef3c7;
+            border: 1px solid #fcd34d;
+            border-radius: 8px;
+            padding: 0.8rem 1rem;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+        .warn::before { content: "⚠ "; font-weight: bold; }
+        .success {
+            background: #ecfdf5;
+            border: 1px solid #6ee7b7;
+            border-radius: 8px;
+            padding: 0.8rem 1rem;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+            color: var(--success);
+        }
+        .success::before { content: "✅ "; }
+        pre {
+            background: var(--code-bg);
+            color: var(--code-text);
+            border-radius: 8px;
+            padding: 1rem 1.2rem;
+            overflow-x: auto;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin: 0.8rem 0;
+            position: relative;
+        }
+        code {
+            font-family: "SF Mono", "Fira Code", "Cascadia Code", monospace;
+            font-size: 0.85em;
+        }
+        p code, li code {
+            background: #f1f5f9;
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.85em;
+            color: #be185d;
+        }
+        .tabs {
+            display: flex;
+            gap: 0;
+            margin: 1rem 0 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .tab {
+            padding: 0.6rem 1.2rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            color: var(--muted);
+            background: none;
+            border-top: none;
+            border-left: none;
+            border-right: none;
+        }
+        .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+        .tab-content { display: none; padding-top: 0.5rem; }
+        .tab-content.active { display: block; }
+        ol, ul { padding-left: 1.5rem; margin-bottom: 0.8rem; }
+        li { margin-bottom: 0.4rem; font-size: 0.95rem; }
+        .daily {
+            background: linear-gradient(135deg, #eff6ff, #f0fdf4);
+            border: 1px solid #bfdbfe;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        .daily h3 { margin-top: 0; }
+        .daily ol { margin-bottom: 0; }
+        .trouble { margin: 1rem 0; }
+        .trouble details {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            overflow: hidden;
+        }
+        .trouble summary {
+            padding: 0.8rem 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            background: #f9fafb;
+            font-size: 0.95rem;
+        }
+        .trouble details > div { padding: 0.8rem 1rem; font-size: 0.9rem; }
+        .step-indicator {
+            display: flex;
+            gap: 0.3rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        .step-dot {
+            width: 32px;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+        }
+        .step-dot.done { background: var(--accent); }
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            font-size: 0.85rem;
+        }
+        @media (max-width: 600px) {
+            .container { padding: 1rem; }
+            header h1 { font-size: 1.4rem; }
+            pre { font-size: 0.78rem; padding: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>静止画くん</h1>
+            <p>動画生成 セットアップガイド</p>
+            <span class="badge">所要時間: 約30分</span>
+        </header>
+
+        <div class="prereq">
+            <h3>事前に必要なもの</h3>
+            <ul>
+                <li>Premiere Pro がインストール済み</li>
+                <li>Google アカウント（@shibuya-ad.com）でログイン済み</li>
+                <li>インターネット接続</li>
+            </ul>
+        </div>
+
+        <!-- Step 1 -->
+        <h2><span class="num">1</span>Node.js のインストール</h2>
+        <div class="tabs" data-group="os1">
+            <button class="tab active" onclick="switchTab(this, 'mac1')">Mac</button>
+            <button class="tab" onclick="switchTab(this, 'win1')">Windows</button>
+        </div>
+        <div id="mac1" class="tab-content active">
+            <ol>
+                <li><strong>ターミナル</strong>を開く（Spotlight で「ターミナル」と検索）</li>
+                <li>Homebrew をインストール:</li>
+            </ol>
+            <pre><code>/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</code></pre>
+            <p>パスワードを聞かれたらMacのログインパスワードを入力</p>
+            <ol start="3">
+                <li>表示される <strong>Next steps</strong> の3行をコピペして実行</li>
+                <li>Node.js をインストール:</li>
+            </ol>
+            <pre><code>brew install node@20</code></pre>
+            <ol start="5">
+                <li>確認:</li>
+            </ol>
+            <pre><code>node --version</code></pre>
+            <div class="success"><code>v20.x.x</code> と表示されればOK</div>
+        </div>
+        <div id="win1" class="tab-content">
+            <ol>
+                <li><a href="https://nodejs.org/ja" target="_blank">https://nodejs.org/ja</a> にアクセス</li>
+                <li><strong>LTS版</strong>（推奨版）をダウンロードしてインストール</li>
+                <li>デフォルト設定のまま「Next」で進める</li>
+                <li>コマンドプロンプトで確認:</li>
+            </ol>
+            <pre><code>node --version</code></pre>
+            <div class="success"><code>v20.x.x</code> と表示されればOK</div>
+        </div>
+
+        <!-- Step 2 -->
+        <h2><span class="num">2</span>プロジェクトのクローン</h2>
+        <div class="tabs" data-group="os2">
+            <button class="tab active" onclick="switchTab(this, 'mac2')">Mac</button>
+            <button class="tab" onclick="switchTab(this, 'win2')">Windows</button>
+        </div>
+        <div id="mac2" class="tab-content active">
+            <pre><code>mkdir -p ~/projects
+cd ~/projects
+git clone https://github.com/iwskmik/cph.git
+cd cph
+npm install</code></pre>
+            <p><code>git</code> が入っていない場合は <code>brew install git</code> を先に実行</p>
+        </div>
+        <div id="win2" class="tab-content">
+            <p>Git がない場合: <a href="https://git-scm.com/download/win" target="_blank">git-scm.com</a> からインストール</p>
+            <pre><code>mkdir %USERPROFILE%\projects
+cd %USERPROFILE%\projects
+git clone https://github.com/iwskmik/cph.git
+cd cph
+npm install</code></pre>
+        </div>
+
+        <!-- Step 3 -->
+        <h2><span class="num">3</span>環境設定ファイルの作成</h2>
+        <p>プロジェクトフォルダ内に <code>.env</code> ファイルを作成し、以下を貼り付け:</p>
+        <pre><code>DATABASE_URL="postgresql://ユーザー名@localhost:5432/cph?schema=public"
+DIRECT_URL="postgresql://ユーザー名@localhost:5432/cph?schema=public"
+NEXTAUTH_SECRET="dev-secret-key-change-in-production"
+NEXTAUTH_URL="http://localhost:3000"
+GOOGLE_SERVICE_ACCOUNT_KEY_PATH="./service-account-key.json"</code></pre>
+        <div class="warn"><code>ユーザー名</code> はPCのユーザー名に置き換えてください</div>
+
+        <!-- Step 4 -->
+        <h2><span class="num">4</span>PostgreSQL のインストールと設定</h2>
+        <div class="tabs" data-group="os4">
+            <button class="tab active" onclick="switchTab(this, 'mac4')">Mac</button>
+            <button class="tab" onclick="switchTab(this, 'win4')">Windows</button>
+        </div>
+        <div id="mac4" class="tab-content active">
+            <pre><code>brew install postgresql@15
+brew services start postgresql@15
+createdb cph</code></pre>
+        </div>
+        <div id="win4" class="tab-content">
+            <ol>
+                <li><a href="https://www.postgresql.org/download/windows/" target="_blank">postgresql.org</a> からインストーラーをダウンロード</li>
+                <li>インストール時のパスワードを覚えておく</li>
+                <li>pgAdmin で <code>cph</code> データベースを作成</li>
+            </ol>
+        </div>
+
+        <!-- Step 5 -->
+        <h2><span class="num">5</span>データベースの初期化</h2>
+        <pre><code>npx prisma db push
+npx tsx prisma/seed.ts</code></pre>
+        <div class="success">「Seed completed!」と表示されればOK</div>
+
+        <!-- Step 6 -->
+        <h2><span class="num">6</span>サービスアカウントキーの配置</h2>
+        <p>運用者から <code>service-account-key.json</code> を受け取り、プロジェクトフォルダ直下に配置:</p>
+        <pre><code>cph/
+├── service-account-key.json  ← ここ
+├── package.json
+├── src/
+└── ...</code></pre>
+        <div class="warn">このファイルは絶対にGitHubにプッシュしないでください</div>
+
+        <!-- Step 7 -->
+        <h2><span class="num">7</span>CEP Bridge のインストール</h2>
+        <p>Premiere Pro と連携するための拡張機能です。</p>
+        <div class="tabs" data-group="os7">
+            <button class="tab active" onclick="switchTab(this, 'mac7')">Mac</button>
+            <button class="tab" onclick="switchTab(this, 'win7')">Windows</button>
+        </div>
+        <div id="mac7" class="tab-content active">
+            <p>CEPデバッグモードを有効化:</p>
+            <pre><code>defaults write com.adobe.CSXS.12 PlayerDebugMode 1
+defaults write com.adobe.CSXS.11 PlayerDebugMode 1
+defaults write com.adobe.CSXS.10 PlayerDebugMode 1</code></pre>
+            <p>CEP拡張ファイルを配置:</p>
+            <pre><code>mkdir -p ~/Library/Application\ Support/Adobe/CEP/extensions/MCPBridgeCEP/CSXS</code></pre>
+            <p>運用者から受け取ったファイル（<code>manifest.xml</code>, <code>CSInterface.js</code>, <code>bridge-cep.js</code>, <code>index.html</code>, <code>.debug</code>）を上記フォルダに配置</p>
+        </div>
+        <div id="win7" class="tab-content">
+            <p>CEPデバッグモードを有効化:</p>
+            <ol>
+                <li><code>Win+R</code> → <code>regedit</code> → Enter</li>
+                <li><code>HKEY_CURRENT_USER\Software\Adobe\CSXS.12</code> に<br><code>PlayerDebugMode</code> = <code>1</code> (文字列) を追加</li>
+            </ol>
+            <p>CEP拡張ファイルを配置:</p>
+            <pre><code>C:\Users\ユーザー名\AppData\Roaming\Adobe\CEP\extensions\MCPBridgeCEP\</code></pre>
+        </div>
+
+        <!-- Step 8 -->
+        <h2><span class="num">8</span>動作確認</h2>
+        <div class="card">
+            <h3>静止画くんの起動</h3>
+            <pre><code>cd ~/projects/cph
+npm run dev</code></pre>
+            <p>ブラウザで <a href="http://localhost:3000" target="_blank">http://localhost:3000</a> を開く</p>
+            <div class="success">ログイン画面が表示されればOK</div>
+        </div>
+        <div class="card">
+            <h3>Premiere Pro + CEP Bridge</h3>
+            <ol>
+                <li>Premiere Pro を起動</li>
+                <li>メニュー → <strong>ウィンドウ → エクステンション → MCP Bridge (CEP)</strong></li>
+                <li><strong>Start Bridge</strong> をクリック</li>
+            </ol>
+            <div class="success">緑ドット2つになればOK</div>
+        </div>
+        <div class="card">
+            <h3>動画生成テスト</h3>
+            <ol>
+                <li>ブラウザで <a href="http://localhost:3000/generate" target="_blank">localhost:3000/generate</a> を開く</li>
+                <li>.prproj のパスを入力してスキャン</li>
+                <li>シーケンス選択 → テキスト選択 → 年齢設定</li>
+                <li>生成開始 → mp4 が出力されれば完了!</li>
+            </ol>
+        </div>
+
+        <!-- Daily -->
+        <div class="daily">
+            <h3>毎日の起動手順（3ステップ）</h3>
+            <ol>
+                <li>ターミナル: <code>cd ~/projects/cph && npm run dev</code></li>
+                <li>ブラウザ: <a href="http://localhost:3000">http://localhost:3000</a> を開く</li>
+                <li>Premiere Pro 起動 → CEP Bridge で Start Bridge</li>
+            </ol>
+        </div>
+
+        <!-- Troubleshooting -->
+        <h2>トラブルシューティング</h2>
+        <div class="trouble">
+            <details>
+                <summary>「サーバーに接続できない」</summary>
+                <div><code>npm run dev</code> が実行されているか確認してください。ターミナルが閉じていると停止します。</div>
+            </details>
+            <details>
+                <summary>「CEP Bridge タイムアウト」</summary>
+                <div>Premiere Pro が起動しているか、CEPパネルで <strong>Start Bridge</strong> が押されているか確認してください。</div>
+            </details>
+            <details>
+                <summary>「テキストが .prproj 内に見つかりませんでした」</summary>
+                <div>.prproj 内のテキストがスキャン結果と一致しているか確認。Premiere Pro で保存し直してから再スキャンしてみてください。</div>
+            </details>
+            <details>
+                <summary>「H.264プリセットが見つかりません」</summary>
+                <div>Premiere Pro 2024〜2027 がインストールされているか確認してください。</div>
+            </details>
+        </div>
+
+        <footer>
+            困ったら岩﨑（iwasaki@shibuya-ad.com）に連絡してください
+        </footer>
+    </div>
+
+    <script>
+        function switchTab(btn, contentId) {
+            const group = btn.parentElement;
+            group.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+            let sibling = group.nextElementSibling;
+            while (sibling && sibling.classList.contains('tab-content')) {
+                sibling.classList.remove('active');
+                sibling = sibling.nextElementSibling;
+            }
+            document.getElementById(contentId).classList.add('active');
+        }
+    </script>
+</body>
+</html>
