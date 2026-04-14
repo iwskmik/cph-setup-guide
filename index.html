@@ -210,10 +210,36 @@
         <div class="prereq">
             <h3>事前に必要なもの</h3>
             <ul>
-                <li>Premiere Pro がインストール済み</li>
-                <li>静止画くんのアカウント（招待済みのメールアドレス）</li>
+                <li>Premiere Pro がインストール済み（ライセンス必要）</li>
+                <li>PCの管理者権限（ソフトウェアのインストールに必要）</li>
                 <li>インターネット接続</li>
             </ul>
+        </div>
+
+        <div class="prereq">
+            <h3>運用者から受け取るもの</h3>
+            <p>セットアップ前に、運用者（岩﨑）から以下を受け取ってください:</p>
+            <ul>
+                <li><code>service-account-key.json</code> — Google Drive連携用のキーファイル</li>
+                <li><strong>CEP Bridgeファイル一式</strong>（5ファイル）— Premiere Pro連携用</li>
+                <li><strong>GitHubリポジトリへの招待</strong> — メールが届きます</li>
+            </ul>
+            <div class="warn">service-account-key.json は外部に共有しないでください。受け取ったらPCに保存し、元のメッセージは削除してください。</div>
+        </div>
+
+        <!-- Step 0 -->
+        <h2><span class="num">0</span>GitHub アカウントの作成</h2>
+        <p>プロジェクトのソースコードを取得するために GitHub アカウントが必要です。</p>
+        <div class="card">
+            <ol>
+                <li><a href="https://github.com/signup" target="_blank">https://github.com/signup</a> にアクセス</li>
+                <li>メールアドレス、パスワード、ユーザー名を入力して登録</li>
+                <li>メールに届く確認コードを入力</li>
+                <li>登録完了後、<strong>運用者にGitHubのユーザー名を伝える</strong></li>
+                <li>運用者がリポジトリへの招待メールを送る</li>
+                <li>メールに届く招待リンクをクリックして <strong>Accept</strong></li>
+            </ol>
+            <div class="success">リポジトリにアクセスできればOK</div>
         </div>
 
         <!-- Step 1 -->
