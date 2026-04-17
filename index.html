@@ -254,9 +254,22 @@
                 <li>Homebrew をインストール:</li>
             </ol>
             <pre><code>/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</code></pre>
-            <p>パスワードを聞かれたらMacのログインパスワードを入力</p>
+            <p>パスワードを聞かれたらMacのログインパスワードを入力（入力しても画面には表示されません）</p>
             <ol start="3">
-                <li>表示される <strong>Next steps</strong> の3行をコピペして実行</li>
+                <li>インストール完了後、ターミナル画面の下の方に <strong>「==&gt; Next steps:」</strong> という表示が出ます。その下に「Run these two commands...」とあり、さらに下に <strong>echo</strong> / <strong>echo</strong> / <strong>eval</strong> で始まる<strong>3行のコマンド</strong>が表示されます：</li>
+            </ol>
+            <div class="note" style="background:#fff7e6;border:1px solid #ffd591;padding:12px 16px;border-radius:6px;margin:12px 0;">
+                <p style="margin:0 0 8px 0;"><strong>表示例（ユーザー名は自分のもの）:</strong></p>
+                <pre style="margin:0;background:#2d3748;color:#e2e8f0;padding:12px;border-radius:4px;font-size:12px;overflow-x:auto;"><code>==&gt; Next steps:
+- Run these two commands in your terminal to add Homebrew to your PATH:
+    echo &gt;&gt; /Users/<span style="color:#fbbf24;">〇〇</span>/.zprofile
+    echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' &gt;&gt; /Users/<span style="color:#fbbf24;">〇〇</span>/.zprofile
+    eval "$(/opt/homebrew/bin/brew shellenv)"</code></pre>
+                <p style="margin:8px 0 0 0;font-size:13px;">↑ この <code>echo</code> / <code>echo</code> / <code>eval</code> で始まる <strong>3行を選択してコピー → ターミナルに貼り付けて Enter</strong></p>
+                <p style="margin:4px 0 0 0;font-size:12px;color:#666;">※ 1行ずつコピペしてもOK、3行まとめてコピペしてもOK（まとめての場合は自動で3行分実行されます）</p>
+                <p style="margin:4px 0 0 0;font-size:12px;color:#666;">※ うまくいかない場合はスクリーンショットを撮って問い合わせてください</p>
+            </div>
+            <ol start="4">
                 <li>Node.js をインストール:</li>
             </ol>
             <pre><code>brew install node@20</code></pre>
