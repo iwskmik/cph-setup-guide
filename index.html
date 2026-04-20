@@ -251,9 +251,14 @@
         <div id="mac1" class="tab-content active">
             <ol>
                 <li><strong>ターミナル</strong>を開く（Spotlight で「ターミナル」と検索）</li>
-                <li>Homebrew をインストール:</li>
+                <li>Homebrew をインストール（<strong>下の1行をターミナルにコピペしてEnter</strong>）:</li>
             </ol>
             <pre><code>/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</code></pre>
+            <div class="note" style="background:#e6f4ff;border:1px solid #91caff;padding:10px 14px;border-radius:6px;margin:12px 0;font-size:13px;">
+                <strong>💡 注意:</strong> この1行をコピペするだけでインストール完了します。<br>
+                GitHubからZIPをダウンロードする必要はありません。<br>
+                （この1行が裏で install.sh を自動取得＆実行してくれます）
+            </div>
             <p>パスワードを聞かれたらMacのログインパスワードを入力（入力しても画面には表示されません）</p>
             <ol start="3">
                 <li>インストール完了後、ターミナル画面の下の方に <strong>「==&gt; Next steps:」</strong> という表示が出ます。その下に「Run these two commands...」とあり、さらに下に <strong>echo</strong> / <strong>echo</strong> / <strong>eval</strong> で始まる<strong>3行のコマンド</strong>が表示されます：</li>
