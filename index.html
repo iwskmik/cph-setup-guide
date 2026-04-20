@@ -421,9 +421,22 @@ npx tsx prisma/seed.ts</code></pre>
             <pre><code>defaults write com.adobe.CSXS.12 PlayerDebugMode 1
 defaults write com.adobe.CSXS.11 PlayerDebugMode 1
 defaults write com.adobe.CSXS.10 PlayerDebugMode 1</code></pre>
-            <p>CEP拡張ファイルを配置:</p>
+            <p>CEP拡張フォルダを作成:</p>
             <pre><code>mkdir -p ~/Library/Application\ Support/Adobe/CEP/extensions/MCPBridgeCEP/CSXS</code></pre>
-            <p>運用者から受け取ったファイル（<code>manifest.xml</code>, <code>CSInterface.js</code>, <code>bridge-cep.js</code>, <code>index.html</code>, <code>.debug</code>）を上記フォルダに配置</p>
+            <p>運用者から受け取ったファイル（<strong>5つ</strong>）を以下の通りに配置：</p>
+            <div class="note" style="background:#fff7e6;border:1px solid #ffd591;padding:12px 16px;border-radius:6px;margin:12px 0;">
+                <pre style="margin:0;background:#2d3748;color:#e2e8f0;padding:12px;border-radius:4px;font-size:12px;overflow-x:auto;"><code>~/Library/Application Support/Adobe/CEP/extensions/MCPBridgeCEP/
+├─ index.html       ← ルート直下
+├─ CSInterface.js   ← ルート直下
+├─ bridge-cep.js    ← ルート直下
+├─ .debug           ← ルート直下（隠しファイル）
+└─ CSXS/
+    └─ manifest.xml ← <span style="color:#fbbf24;">manifest.xml だけ CSXS サブフォルダの中！</span></code></pre>
+                <p style="margin:8px 0 0 0;font-size:12px;color:#c00;"><strong>⚠️ 要注意:</strong> <code>manifest.xml</code> だけ <code>CSXS/</code> サブフォルダの中に入ります。他の4ファイルは <code>MCPBridgeCEP/</code> 直下に置いてください。</p>
+            </div>
+            <p>配置後、以下のコマンドで確認：</p>
+            <pre><code>ls -la ~/Library/Application\ Support/Adobe/CEP/extensions/MCPBridgeCEP/</code></pre>
+            <div class="success"><code>index.html</code>, <code>CSInterface.js</code>, <code>bridge-cep.js</code>, <code>.debug</code>, <code>CSXS</code> の5項目が表示されればOK</div>
         </div>
         <div id="win7" class="tab-content">
             <p>CEPデバッグモードを有効化:</p>
@@ -431,8 +444,18 @@ defaults write com.adobe.CSXS.10 PlayerDebugMode 1</code></pre>
                 <li><code>Win+R</code> → <code>regedit</code> → Enter</li>
                 <li><code>HKEY_CURRENT_USER\Software\Adobe\CSXS.12</code> に<br><code>PlayerDebugMode</code> = <code>1</code> (文字列) を追加</li>
             </ol>
-            <p>CEP拡張ファイルを配置:</p>
+            <p>CEP拡張フォルダを作成し、運用者から受け取った5ファイルを配置：</p>
             <pre><code>C:\Users\ユーザー名\AppData\Roaming\Adobe\CEP\extensions\MCPBridgeCEP\</code></pre>
+            <div class="note" style="background:#fff7e6;border:1px solid #ffd591;padding:12px 16px;border-radius:6px;margin:12px 0;">
+                <pre style="margin:0;background:#2d3748;color:#e2e8f0;padding:12px;border-radius:4px;font-size:12px;overflow-x:auto;"><code>MCPBridgeCEP\
+├─ index.html       ← ルート直下
+├─ CSInterface.js   ← ルート直下
+├─ bridge-cep.js    ← ルート直下
+├─ .debug           ← ルート直下（隠しファイル）
+└─ CSXS\
+    └─ manifest.xml ← <span style="color:#fbbf24;">manifest.xml だけ CSXS サブフォルダの中！</span></code></pre>
+                <p style="margin:8px 0 0 0;font-size:12px;color:#c00;"><strong>⚠️ 要注意:</strong> <code>manifest.xml</code> だけ <code>CSXS\</code> サブフォルダの中に入ります。</p>
+            </div>
         </div>
 
         <!-- Step 8 -->
