@@ -260,6 +260,13 @@
                 （この1行が裏で install.sh を自動取得＆実行してくれます）
             </div>
             <p>パスワードを聞かれたらMacのログインパスワードを入力（入力しても画面には表示されません）</p>
+            <div class="note" style="background:#fff7e6;border:1px solid #ffd591;padding:10px 14px;border-radius:6px;margin:12px 0;font-size:13px;">
+                <strong>⚠️ パスワードなしアカウントを使っている方へ</strong><br>
+                macOSの仕様で、ログインパスワード無しアカウントだと sudo（管理者コマンド）が通らず Homebrew インストールが失敗します。<br>
+                一時的にパスワードを設定してください：<br>
+                <strong>システム設定 → ユーザとグループ → 自分のアカウント → パスワードを設定</strong><br>
+                設定後、再度コマンドを実行してください。
+            </div>
             <ol start="3">
                 <li>インストール完了後、ターミナル画面の下の方に <strong>「==&gt; Next steps:」</strong> という表示が出ます。その下に「Run these two commands...」とあり、さらに下に <strong>echo</strong> / <strong>echo</strong> / <strong>eval</strong> で始まる<strong>3行のコマンド</strong>が表示されます：</li>
             </ol>
