@@ -378,13 +378,54 @@ npm install</code></pre>
 
         <!-- Step 3 -->
         <h2><span class="num">3</span>環境設定ファイルの作成</h2>
-        <p>プロジェクトフォルダ内に <code>.env</code> ファイルを作成し、以下を貼り付け:</p>
-        <pre><code>DATABASE_URL="postgresql://ユーザー名@localhost:5432/cph?schema=public"
-DIRECT_URL="postgresql://ユーザー名@localhost:5432/cph?schema=public"
-NEXTAUTH_SECRET="dev-secret-key-change-in-production"
-NEXTAUTH_URL="http://localhost:3000"
-GOOGLE_SERVICE_ACCOUNT_KEY_PATH="./service-account-key.json"</code></pre>
-        <div class="warn"><code>ユーザー名</code> はPCのユーザー名に置き換えてください</div>
+        <p>プロジェクトフォルダ（<code>~/projects/cph/</code>）直下に <code>.env</code> という名前のファイルを作成します。</p>
+
+        <div class="tabs" data-group="os3">
+            <button class="tab active" onclick="switchTab(this, 'mac3')">Mac（ターミナル）</button>
+            <button class="tab" onclick="switchTab(this, 'editor3')">テキストエディタ</button>
+        </div>
+
+        <div id="mac3" class="tab-content active">
+            <p><strong>手順:</strong></p>
+            <ol>
+                <li>ターミナルで下記を実行してプロジェクトフォルダに移動し、<code>.env</code>を作成する準備をします:
+                    <pre><code>cd ~/projects/cph
+nano .env</code></pre>
+                </li>
+                <li><code>nano</code> というエディタが開きます（画面が黒くなって下部に操作ヒントが表示）</li>
+                <li>運用者から受け取った <code>.env</code> の内容を <strong>Cmd+V</strong> で貼り付け</li>
+                <li><strong>Ctrl+X</strong> を押す</li>
+                <li><code>Save modified buffer?</code> と聞かれたら <strong>Y</strong> キーを押す</li>
+                <li><code>File Name to Write: .env</code> のまま <strong>Enter</strong> を押す</li>
+                <li>通常のターミナル画面に戻ります</li>
+            </ol>
+            <p><strong>確認方法:</strong></p>
+            <pre><code>cat ~/projects/cph/.env</code></pre>
+            <p>先ほど貼り付けた内容が表示されればOKです。</p>
+        </div>
+
+        <div id="editor3" class="tab-content">
+            <p><strong>VS Code など</strong>テキストエディタで作る場合:</p>
+            <ol>
+                <li>エディタで新規ファイルを作成</li>
+                <li>運用者から受け取った <code>.env</code> の内容を貼り付け</li>
+                <li>保存時、保存先を <code>~/projects/cph/</code> にする</li>
+                <li>ファイル名を <code>.env</code>（ドット＋env、拡張子なし）にする</li>
+                <li>保存</li>
+            </ol>
+            <div class="warn"><strong>テキストエディット（Mac標準）を使う場合の注意:</strong>
+                <ul>
+                    <li>メニュー「フォーマット」→「標準テキストにする」を選択（リッチテキストだと壊れる）</li>
+                    <li>保存ダイアログで「.txt が付いていない場合は使用」のチェックを<strong>外す</strong></li>
+                </ul>
+            </div>
+            <p><strong>Finderで見えない場合:</strong> <code>.env</code> はドットで始まるので隠しファイル扱い。Finderで <strong>Cmd+Shift+.</strong>（コマンド＋シフト＋ピリオド）で表示切替できます。</p>
+        </div>
+
+        <div class="warn">
+            <strong>書き込む内容</strong>は運用者が Chatwork などで渡した <code>.env</code> の中身を使用してください。<br>
+            内容には DB接続情報や認証キーなど機密情報が含まれるため、外部に漏らさないよう注意。
+        </div>
 
         <!-- Step 4 -->
         <h2><span class="num">4</span>PostgreSQL のインストールと設定</h2>
