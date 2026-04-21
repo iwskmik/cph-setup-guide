@@ -356,9 +356,21 @@ cd ~/projects
 git clone https://github.com/iwskmik/cph.git
 cd cph
 npm install</code></pre>
-            <p class="text-xs"><code>git</code> が入っていない場合は <code>brew install git</code> を先に実行</p>
+            <div class="warn" style="margin-top:8px;">
+                <strong>git が入っているか確認:</strong><br>
+                ターミナルで下記を実行:
+                <pre style="margin:6px 0;"><code>git --version</code></pre>
+                <ul style="margin:4px 0;">
+                    <li><strong>入ってる場合:</strong> <code>git version 2.x.x</code> のように表示される → そのまま <code>git clone</code> へ</li>
+                    <li><strong>入っていない場合:</strong> <code>command not found</code> または <code>xcode-select</code> のダイアログが出る → 下記で先にインストール:
+                        <pre style="margin:6px 0;"><code>brew install git</code></pre>
+                        インストール完了後、再度 <code>git --version</code> で確認してから <code>git clone</code> へ進む
+                    </li>
+                </ul>
+            </div>
         </div>
         <div id="win2" class="tab-content">
+            <p><strong>git が入っているか確認:</strong> コマンドプロンプトまたは PowerShell で <code>git --version</code> を実行。<code>git version 2.x.x</code> と出れば入っています。出なければ下記からインストール:</p>
             <p>Git がない場合: <a href="https://git-scm.com/download/win" target="_blank">git-scm.com</a> からインストール</p>
             <ol>
                 <li>GitHub CLI をインストール: <a href="https://cli.github.com/" target="_blank">cli.github.com</a> からインストーラ取得</li>
