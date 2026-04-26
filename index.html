@@ -1,604 +1,185 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>静止画くん - 動画生成セットアップガイド</title>
-    <style>
-        :root {
-            --bg: #fafafa;
-            --card: #ffffff;
-            --text: #1a1a1a;
-            --muted: #6b7280;
-            --border: #e5e7eb;
-            --accent: #2563eb;
-            --accent-light: #eff6ff;
-            --code-bg: #1e293b;
-            --code-text: #e2e8f0;
-            --success: #059669;
-            --warning: #d97706;
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Hiragino Sans", "Noto Sans JP", sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.8;
-        }
-        .container { max-width: 780px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
-        header {
-            text-align: center;
-            padding: 3rem 0 2rem;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 2rem;
-        }
-        header h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.5rem; }
-        header p { color: var(--muted); font-size: 0.95rem; }
-        .badge {
-            display: inline-block;
-            background: var(--accent-light);
-            color: var(--accent);
-            font-size: 0.75rem;
-            font-weight: 600;
-            padding: 0.2rem 0.6rem;
-            border-radius: 9999px;
-            margin-top: 0.5rem;
-        }
-        h2 {
-            font-size: 1.35rem;
-            font-weight: 700;
-            margin: 2.5rem 0 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid var(--accent);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        h2 .num {
-            background: var(--accent);
-            color: white;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.85rem;
-            flex-shrink: 0;
-        }
-        h3 { font-size: 1.05rem; font-weight: 600; margin: 1.5rem 0 0.5rem; color: var(--text); }
-        p { margin-bottom: 0.8rem; font-size: 0.95rem; }
-        .card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.2rem 1.5rem;
-            margin: 1rem 0;
-        }
-        .prereq {
-            background: var(--accent-light);
-            border: 1px solid #bfdbfe;
-            border-radius: 12px;
-            padding: 1.2rem 1.5rem;
-            margin: 1rem 0;
-        }
-        .prereq h3 { margin-top: 0; color: var(--accent); }
-        .warn {
-            background: #fef3c7;
-            border: 1px solid #fcd34d;
-            border-radius: 8px;
-            padding: 0.8rem 1rem;
-            margin: 1rem 0;
-            font-size: 0.9rem;
-        }
-        .warn::before { content: "⚠ "; font-weight: bold; }
-        .success {
-            background: #ecfdf5;
-            border: 1px solid #6ee7b7;
-            border-radius: 8px;
-            padding: 0.8rem 1rem;
-            margin: 1rem 0;
-            font-size: 0.9rem;
-            color: var(--success);
-        }
-        .success::before { content: "✅ "; }
-        pre {
-            background: var(--code-bg);
-            color: var(--code-text);
-            border-radius: 8px;
-            padding: 1rem 1.2rem;
-            overflow-x: auto;
-            font-size: 0.85rem;
-            line-height: 1.6;
-            margin: 0.8rem 0;
-            position: relative;
-        }
-        code {
-            font-family: "SF Mono", "Fira Code", "Cascadia Code", monospace;
-            font-size: 0.85em;
-        }
-        p code, li code {
-            background: #f1f5f9;
-            padding: 0.15rem 0.4rem;
-            border-radius: 4px;
-            font-size: 0.85em;
-            color: #be185d;
-        }
-        .tabs {
-            display: flex;
-            gap: 0;
-            margin: 1rem 0 0;
-            border-bottom: 1px solid var(--border);
-        }
-        .tab {
-            padding: 0.6rem 1.2rem;
-            font-size: 0.9rem;
-            font-weight: 500;
-            cursor: pointer;
-            border-bottom: 2px solid transparent;
-            color: var(--muted);
-            background: none;
-            border-top: none;
-            border-left: none;
-            border-right: none;
-        }
-        .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
-        .tab-content { display: none; padding-top: 0.5rem; }
-        .tab-content.active { display: block; }
-        ol, ul { padding-left: 1.5rem; margin-bottom: 0.8rem; }
-        li { margin-bottom: 0.4rem; font-size: 0.95rem; }
-        .daily {
-            background: linear-gradient(135deg, #eff6ff, #f0fdf4);
-            border: 1px solid #bfdbfe;
-            border-radius: 12px;
-            padding: 1.5rem;
-            margin: 1.5rem 0;
-        }
-        .daily h3 { margin-top: 0; }
-        .daily ol { margin-bottom: 0; }
-        .trouble { margin: 1rem 0; }
-        .trouble details {
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            margin-bottom: 0.5rem;
-            overflow: hidden;
-        }
-        .trouble summary {
-            padding: 0.8rem 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            background: #f9fafb;
-            font-size: 0.95rem;
-        }
-        .trouble details > div { padding: 0.8rem 1rem; font-size: 0.9rem; }
-        .step-indicator {
-            display: flex;
-            gap: 0.3rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-        }
-        .step-dot {
-            width: 32px;
-            height: 4px;
-            background: var(--border);
-            border-radius: 2px;
-        }
-        .step-dot.done { background: var(--accent); }
-        footer {
-            text-align: center;
-            margin-top: 3rem;
-            padding-top: 2rem;
-            border-top: 1px solid var(--border);
-            color: var(--muted);
-            font-size: 0.85rem;
-        }
-        @media (max-width: 600px) {
-            .container { padding: 1rem; }
-            header h1 { font-size: 1.4rem; }
-            pre { font-size: 0.78rem; padding: 0.8rem; }
-        }
-    </style>
+<meta charset="utf-8" />
+<title>中継アプリセットアップガイド</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", sans-serif;
+         max-width: 820px; margin: 2em auto; padding: 0 1.5em; line-height: 1.7; color: #222; }
+  h1 { border-bottom: 3px solid #333; padding-bottom: .3em; }
+  h2 { margin-top: 2.5em; border-bottom: 1px solid #ccc; padding-bottom: .2em; }
+  h3 { margin-top: 1.5em; }
+  code { background: #f4f4f4; padding: 2px 6px; border-radius: 3px;
+         font-family: "SF Mono", Menlo, monospace; font-size: .92em; }
+  pre { background: #1e1e1e; color: #e0e0e0; padding: 1em 1.2em;
+        border-radius: 6px; overflow-x: auto; font-size: .9em; line-height: 1.5; }
+  pre code { background: transparent; color: inherit; padding: 0; }
+  table { border-collapse: collapse; margin: 1em 0; width: 100%; }
+  th, td { border: 1px solid #ddd; padding: .5em .8em; text-align: left; vertical-align: top; }
+  th { background: #f0f0f0; }
+  blockquote { border-left: 4px solid #4caf50; background: #f4faf4;
+               padding: .6em 1em; color: #444; margin: 1em 0; }
+  a { color: #0969da; }
+  hr { margin: 2em 0; border: 0; border-top: 1px solid #ddd; }
+</style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>静止画くん</h1>
-            <p>動画生成 セットアップガイド</p>
-            <span class="badge">所要時間: 約30分</span>
-        </header>
+<h1>中継アプリ（cph-relay）セットアップガイド</h1>
+<p>静止画くん（cph）でアセクリが動画を自動生成するには、<strong>中継アプリ</strong>を自分の Mac に常駐させる必要があります。<br />このガイド通りに進めれば 30〜45 分でセットアップ完了します。</p>
 
-        <div class="prereq">
-            <h3>事前に必要なもの</h3>
-            <ul>
-                <li>Premiere Pro がインストール済み（ライセンス必要）</li>
-                <li>PCの管理者権限（ソフトウェアのインストールに必要）</li>
-                <li>インターネット接続</li>
-            </ul>
-        </div>
+<hr />
 
-        <div class="prereq">
-            <h3>運用者から受け取るもの</h3>
-            <p>セットアップ前に、運用者（岩﨑）から以下を受け取ってください:</p>
-            <ul>
-                <li><code>service-account-key.json</code> — Google Drive連携用のキーファイル</li>
-                <li><strong>CEP Bridgeファイル一式</strong>（5ファイル）— Premiere Pro連携用</li>
-                <li><strong>GitHubリポジトリへの招待</strong> — メールが届きます</li>
-            </ul>
-            <div class="warn">service-account-key.json は外部に共有しないでください。受け取ったらPCに保存し、元のメッセージは削除してください。</div>
-        </div>
+<h2>0. 事前に必要なもの</h2>
+<table>
+  <tr><th>#</th><th>必要なもの</th><th>用意の仕方</th></tr>
+  <tr><td>1</td><td><strong>Mac</strong>（Apple Silicon でも Intel でもOK）</td><td>あなたの作業用 Mac</td></tr>
+  <tr><td>2</td><td><strong>GitHub アカウント</strong></td><td>持ってなければ <a href="https://github.com/signup">https://github.com/signup</a> で作成（5分）</td></tr>
+  <tr><td>3</td><td><strong>Premiere Pro</strong>（2024〜2027 のいずれか）</td><td>既に使っているはず</td></tr>
+  <tr><td>4</td><td><strong>MCPBridgeCEP 拡張</strong>（PPro 用プラグイン）</td><td>運用者から配布されます</td></tr>
+  <tr><td>5</td><td><strong>cph-relay.zip</strong></td><td>運用者から配布されます（AirDrop）</td></tr>
+  <tr><td>6</td><td><strong>service-account-key.json</strong></td><td>運用者から配布されます（AirDrop、扱い注意：他人に渡さない）</td></tr>
+  <tr><td>7</td><td><strong>cph アカウント</strong></td><td>運用者からの招待メールで登録済みの状態</td></tr>
+  <tr><td>8</td><td><strong>GitHub ユーザー名を運用者に伝える</strong></td><td>運用者がシステムにあなたを紐付けます</td></tr>
+</table>
 
-        <!-- Step 0 -->
-        <h2><span class="num">0</span>GitHub アカウントの作成</h2>
-        <p>プロジェクトのソースコードを取得するために GitHub アカウントが必要です。</p>
-        <div class="card">
-            <ol>
-                <li><a href="https://github.com/signup" target="_blank">https://github.com/signup</a> にアクセス</li>
-                <li>メールアドレス、パスワード、ユーザー名を入力して登録</li>
-                <li>メールに届く確認コードを入力</li>
-                <li>登録完了後、<strong>運用者にGitHubのユーザー名を伝える</strong></li>
-                <li>運用者がリポジトリへの招待メールを送る</li>
-                <li>メールに届く招待リンクをクリックして <strong>Accept</strong></li>
-            </ol>
-            <div class="success">リポジトリにアクセスできればOK</div>
-        </div>
+<hr />
 
-        <!-- Step 1 -->
-        <h2><span class="num">1</span>Node.js のインストール</h2>
-        <div class="tabs" data-group="os1">
-            <button class="tab active" onclick="switchTab(this, 'mac1')">Mac</button>
-            <button class="tab" onclick="switchTab(this, 'win1')">Windows</button>
-        </div>
-        <div id="mac1" class="tab-content active">
-            <ol>
-                <li><strong>ターミナル</strong>を開く（Spotlight で「ターミナル」と検索）</li>
-                <li>Homebrew をインストール（<strong>下の1行をターミナルにコピペしてEnter</strong>）:</li>
-            </ol>
-            <pre><code>/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</code></pre>
-            <div class="note" style="background:#e6f4ff;border:1px solid #91caff;padding:10px 14px;border-radius:6px;margin:12px 0;font-size:13px;">
-                <strong>💡 注意:</strong> この1行をコピペするだけでインストール完了します。<br>
-                GitHubからZIPをダウンロードする必要はありません。<br>
-                （この1行が裏で install.sh を自動取得＆実行してくれます）
-            </div>
-            <p>パスワードを聞かれたらMacのログインパスワードを入力（入力しても画面には表示されません）</p>
-            <div class="note" style="background:#fff7e6;border:1px solid #ffd591;padding:10px 14px;border-radius:6px;margin:12px 0;font-size:13px;">
-                <strong>⚠️ パスワードなしアカウントを使っている方へ</strong><br>
-                macOSの仕様で、ログインパスワード無しアカウントだと sudo（管理者コマンド）が通らず Homebrew インストールが失敗します。<br>
-                一時的にパスワードを設定してください：<br>
-                <strong>システム設定 → ユーザとグループ → 自分のアカウント → パスワードを設定</strong><br>
-                設定後、再度コマンドを実行してください。
-            </div>
-            <ol start="3">
-                <li>インストール完了後、ターミナル画面の下の方に <strong>「==&gt; Next steps:」</strong> という表示が出ます。その下に「Run these two commands...」とあり、さらに下に <strong>echo</strong> / <strong>echo</strong> / <strong>eval</strong> で始まる<strong>3行のコマンド</strong>が表示されます：</li>
-            </ol>
-            <div class="note" style="background:#fff7e6;border:1px solid #ffd591;padding:12px 16px;border-radius:6px;margin:12px 0;">
-                <p style="margin:0 0 8px 0;"><strong>表示例（ユーザー名は自分のもの）:</strong></p>
-                <pre style="margin:0;background:#2d3748;color:#e2e8f0;padding:12px;border-radius:4px;font-size:12px;overflow-x:auto;"><code>==&gt; Next steps:
-- Run these two commands in your terminal to add Homebrew to your PATH:
-    echo &gt;&gt; /Users/<span style="color:#fbbf24;">〇〇</span>/.zprofile
-    echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' &gt;&gt; /Users/<span style="color:#fbbf24;">〇〇</span>/.zprofile
-    eval "$(/opt/homebrew/bin/brew shellenv)"</code></pre>
-                <p style="margin:8px 0 0 0;font-size:13px;">↑ この <code>echo</code> / <code>echo</code> / <code>eval</code> で始まる <strong>3行を1行ずつコピペ</strong>してください</p>
-                <p style="margin:4px 0 0 0;font-size:12px;color:#c00;font-weight:bold;">⚠️ 3行まとめてコピペすると改行が認識されず1行目しか実行されない場合があります。必ず1行ずつ実行してください。</p>
-                <p style="margin:4px 0 0 0;font-size:12px;color:#666;">※ 1行目（echo）→ Enter → 2行目（echo）→ Enter → 3行目（eval）→ Enter の順</p>
-                <p style="margin:4px 0 0 0;font-size:12px;color:#666;">※ うまくいかない場合はスクリーンショットを撮って問い合わせてください</p>
-            </div>
-            <ol start="4">
-                <li>Homebrewのパスが通ったか確認（任意）:</li>
-            </ol>
-            <pre><code>which brew</code></pre>
-            <div class="success"><code>/opt/homebrew/bin/brew</code> と表示されればOK</div>
-            <ol start="5">
-                <li>Node.js をインストール:</li>
-            </ol>
-            <pre><code>brew install node@20</code></pre>
-            <ol start="6">
-                <li>確認:</li>
-            </ol>
-            <pre><code>node --version</code></pre>
-            <div class="success"><code>v20.x.x</code> と表示されればOK</div>
-        </div>
-        <div id="win1" class="tab-content">
-            <ol>
-                <li><a href="https://nodejs.org/ja" target="_blank">https://nodejs.org/ja</a> にアクセス</li>
-                <li><strong>LTS版</strong>（推奨版）をダウンロードしてインストール</li>
-                <li>デフォルト設定のまま「Next」で進める</li>
-                <li>コマンドプロンプトで確認:</li>
-            </ol>
-            <pre><code>node --version</code></pre>
-            <div class="success"><code>v20.x.x</code> と表示されればOK</div>
-        </div>
+<h2>1. Node.js をインストール</h2>
+<p>中継アプリは Node.js 20 以上で動きます。<strong>ターミナル</strong>を開いて確認:</p>
+<pre><code>node --version</code></pre>
+<p><code>v20.x.x</code> 以上が表示されたら OK。表示されなかったり古かったりしたら、Homebrew で入れる:</p>
 
-        <!-- Step 2 -->
-        <h2><span class="num">2</span>プロジェクトのクローン</h2>
+<h3>Homebrew が無い場合（インストール）</h3>
+<pre><code>/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</code></pre>
+<p>※ 完了後、画面に出てくる指示通り <code>eval "$(/opt/homebrew/bin/brew shellenv)"</code> などを実行してパスを通す。</p>
 
-        <div class="note" style="background:#e6f4ff;border:1px solid #91caff;padding:12px 16px;border-radius:6px;margin:12px 0;">
-            <p style="margin:0 0 8px 0;"><strong>🔑 GitHub認証について</strong></p>
-            <p style="margin:0 0 8px 0;font-size:13px;">
-                2021年以降、GitHubはパスワード直接入力による認証を廃止しました。
-                クローン前に <strong>GitHub CLI (<code>gh</code>)</strong> で認証を済ませておくのが一番楽です。
-            </p>
-        </div>
+<h3>Node.js を入れる</h3>
+<pre><code>brew install node@20
+echo 'export PATH="/opt/homebrew/opt/node@20/bin:$PATH"' &gt;&gt; ~/.zshrc
+source ~/.zshrc
+node --version  # v20.x.x が出れば OK</code></pre>
 
-        <div class="tabs" data-group="os2">
-            <button class="tab active" onclick="switchTab(this, 'mac2')">Mac</button>
-            <button class="tab" onclick="switchTab(this, 'win2')">Windows</button>
-        </div>
-        <div id="mac2" class="tab-content active">
-            <ol>
-                <li>GitHub CLI をインストール:</li>
-            </ol>
-            <pre><code>brew install gh</code></pre>
-            <ol start="2">
-                <li>GitHub にログイン:</li>
-            </ol>
-            <pre><code>gh auth login</code></pre>
-            <div class="note" style="background:#fff7e6;border:1px solid #ffd591;padding:12px 16px;border-radius:6px;margin:12px 0;">
-                <p style="margin:0 0 6px 0;"><strong>対話形式で聞かれる内容（上から順に）:</strong></p>
-                <ul style="margin:0;padding-left:20px;font-size:13px;">
-                    <li><code>What account do you want to log into?</code> → <strong>GitHub.com</strong>（Enter）</li>
-                    <li><code>What is your preferred protocol for Git operations?</code> → <strong>HTTPS</strong>（Enter）</li>
-                    <li><code>Authenticate Git with your GitHub credentials?</code> → <strong>Yes</strong>（Enter）</li>
-                    <li><code>How would you like to authenticate GitHub CLI?</code> → <strong>Login with a web browser</strong>（Enter）</li>
-                </ul>
-                <p style="margin:8px 0 0 0;font-size:13px;">
-                    画面に <strong>8桁のコード（例: ABCD-1234）</strong>が表示されます。
-                    コピーして Enter → ブラウザが開く → コードを貼り付け → GitHub にログイン → 承認
-                </p>
-                <p style="margin:4px 0 0 0;font-size:12px;color:#666;">
-                    ※ <code>✓ Logged in as ...</code> と表示されれば成功
-                </p>
-            </div>
-            <ol start="3">
-                <li>プロジェクトをクローン:</li>
-            </ol>
-            <pre><code>mkdir -p ~/projects
-cd ~/projects
-git clone https://github.com/iwskmik/cph.git
-cd cph
+<hr />
+
+<h2>2. cph-relay 本体を配置</h2>
+<p>運用者から AirDrop で受け取った <strong><code>cph-relay.zip</code></strong> を <code>Downloads</code> フォルダに置く。</p>
+<p>ターミナルで:</p>
+<pre><code>cd ~
+unzip ~/Downloads/cph-relay.zip -d ~/projects
+cd ~/projects/cph-relay
 npm install</code></pre>
-            <div class="warn" style="margin-top:8px;">
-                <strong>git が入っているか確認:</strong><br>
-                ターミナルで下記を実行:
-                <pre style="margin:6px 0;"><code>git --version</code></pre>
-                <ul style="margin:4px 0;">
-                    <li><strong>入ってる場合:</strong> <code>git version 2.x.x</code> のように表示される → そのまま <code>git clone</code> へ</li>
-                    <li><strong>入っていない場合:</strong> <code>command not found</code> または <code>xcode-select</code> のダイアログが出る → 下記で先にインストール:
-                        <pre style="margin:6px 0;"><code>brew install git</code></pre>
-                        インストール完了後、再度 <code>git --version</code> で確認してから <code>git clone</code> へ進む
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div id="win2" class="tab-content">
-            <p><strong>git が入っているか確認:</strong> コマンドプロンプトまたは PowerShell で <code>git --version</code> を実行。<code>git version 2.x.x</code> と出れば入っています。出なければ下記からインストール:</p>
-            <p>Git がない場合: <a href="https://git-scm.com/download/win" target="_blank">git-scm.com</a> からインストール</p>
-            <ol>
-                <li>GitHub CLI をインストール: <a href="https://cli.github.com/" target="_blank">cli.github.com</a> からインストーラ取得</li>
-                <li>GitHub にログイン:</li>
-            </ol>
-            <pre><code>gh auth login</code></pre>
-            <p>Mac と同じ対話形式（<code>GitHub.com</code> → <code>HTTPS</code> → <code>Yes</code> → <code>Login with a web browser</code>）</p>
-            <ol start="3">
-                <li>プロジェクトをクローン:</li>
-            </ol>
-            <pre><code>mkdir %USERPROFILE%\projects
-cd %USERPROFILE%\projects
-git clone https://github.com/iwskmik/cph.git
-cd cph
-npm install</code></pre>
-        </div>
+<p><code>npm install</code> には 2〜3 分かかる。最後に <code>added XX packages</code> と出れば OK。</p>
+<blockquote>エラーが出る場合は <strong>末尾のトラブルシュート</strong>を参照。</blockquote>
 
-        <!-- Step 3 -->
-        <h2><span class="num">3</span>環境設定ファイルの作成</h2>
-        <p>プロジェクトフォルダ（<code>~/projects/cph/</code>）直下に <code>.env</code> という名前のファイルを作成します。</p>
+<hr />
 
-        <div class="tabs" data-group="os3">
-            <button class="tab active" onclick="switchTab(this, 'mac3')">Mac（ターミナル）</button>
-            <button class="tab" onclick="switchTab(this, 'editor3')">テキストエディタ</button>
-        </div>
+<h2>3. サービスアカウント鍵を配置</h2>
+<p>運用者から AirDrop で受け取った <strong><code>service-account-key.json</code></strong> を、決まった場所に置く:</p>
+<pre><code>mkdir -p ~/.config/cph-relay
+mv ~/Downloads/service-account-key.json ~/.config/cph-relay/
+chmod 600 ~/.config/cph-relay/service-account-key.json</code></pre>
+<blockquote>このファイルは Google Drive へのアップロード権限を持っています。<strong>他人に渡さない・公開リポジトリに上げない</strong>こと。</blockquote>
 
-        <div id="mac3" class="tab-content active">
-            <p><strong>手順:</strong></p>
-            <ol>
-                <li>ターミナルで下記を実行してプロジェクトフォルダに移動し、<code>.env</code>を作成する準備をします:
-                    <pre><code>cd ~/projects/cph
-nano .env</code></pre>
-                </li>
-                <li><code>nano</code> というエディタが開きます（画面が黒くなって下部に操作ヒントが表示）</li>
-                <li>運用者から受け取った <code>.env</code> の内容を <strong>Cmd+V</strong> で貼り付け</li>
-                <li><strong>Ctrl+X</strong> を押す</li>
-                <li><code>Save modified buffer?</code> と聞かれたら <strong>Y</strong> キーを押す</li>
-                <li><code>File Name to Write: .env</code> のまま <strong>Enter</strong> を押す</li>
-                <li>通常のターミナル画面に戻ります</li>
-            </ol>
-            <p><strong>確認方法:</strong></p>
-            <pre><code>cat ~/projects/cph/.env</code></pre>
-            <p>先ほど貼り付けた内容が表示されればOKです。</p>
-        </div>
+<hr />
 
-        <div id="editor3" class="tab-content">
-            <p><strong>VS Code など</strong>テキストエディタで作る場合:</p>
-            <ol>
-                <li>エディタで新規ファイルを作成</li>
-                <li>運用者から受け取った <code>.env</code> の内容を貼り付け</li>
-                <li>保存時、保存先を <code>~/projects/cph/</code> にする</li>
-                <li>ファイル名を <code>.env</code>（ドット＋env、拡張子なし）にする</li>
-                <li>保存</li>
-            </ol>
-            <div class="warn"><strong>テキストエディット（Mac標準）を使う場合の注意:</strong>
-                <ul>
-                    <li>メニュー「フォーマット」→「標準テキストにする」を選択（リッチテキストだと壊れる）</li>
-                    <li>保存ダイアログで「.txt が付いていない場合は使用」のチェックを<strong>外す</strong></li>
-                </ul>
-            </div>
-            <p><strong>Finderで見えない場合:</strong> <code>.env</code> はドットで始まるので隠しファイル扱い。Finderで <strong>Cmd+Shift+.</strong>（コマンド＋シフト＋ピリオド）で表示切替できます。</p>
-        </div>
-
-        <div class="warn">
-            <strong>書き込む内容</strong>は運用者が Chatwork などで渡した <code>.env</code> の中身を使用してください。<br>
-            内容には DB接続情報や認証キーなど機密情報が含まれるため、外部に漏らさないよう注意。
-        </div>
-
-        <!-- Step 4 -->
-        <h2><span class="num">4</span>PostgreSQL のインストールと設定</h2>
-        <div class="tabs" data-group="os4">
-            <button class="tab active" onclick="switchTab(this, 'mac4')">Mac</button>
-            <button class="tab" onclick="switchTab(this, 'win4')">Windows</button>
-        </div>
-        <div id="mac4" class="tab-content active">
-            <pre><code>brew install postgresql@15
-brew services start postgresql@15
-createdb cph</code></pre>
-        </div>
-        <div id="win4" class="tab-content">
-            <ol>
-                <li><a href="https://www.postgresql.org/download/windows/" target="_blank">postgresql.org</a> からインストーラーをダウンロード</li>
-                <li>インストール時のパスワードを覚えておく</li>
-                <li>pgAdmin で <code>cph</code> データベースを作成</li>
-            </ol>
-        </div>
-
-        <!-- Step 5 -->
-        <h2><span class="num">5</span>データベースの初期化</h2>
-        <pre><code>npx prisma db push
-npx tsx prisma/seed.ts</code></pre>
-        <div class="success">「Seed completed!」と表示されればOK</div>
-
-        <!-- Step 6 -->
-        <h2><span class="num">6</span>サービスアカウントキーの配置</h2>
-        <p>運用者から <code>service-account-key.json</code> を受け取り、プロジェクトフォルダ直下に配置:</p>
-        <pre><code>cph/
-├── service-account-key.json  ← ここ
-├── package.json
-├── src/
-└── ...</code></pre>
-        <div class="warn">このファイルは絶対にGitHubにプッシュしないでください</div>
-
-        <!-- Step 7 -->
-        <h2><span class="num">7</span>CEP Bridge のインストール</h2>
-        <p>Premiere Pro と連携するための拡張機能です。</p>
-        <div class="tabs" data-group="os7">
-            <button class="tab active" onclick="switchTab(this, 'mac7')">Mac</button>
-            <button class="tab" onclick="switchTab(this, 'win7')">Windows</button>
-        </div>
-        <div id="mac7" class="tab-content active">
-            <p>CEPデバッグモードを有効化:</p>
-            <pre><code>defaults write com.adobe.CSXS.12 PlayerDebugMode 1
-defaults write com.adobe.CSXS.11 PlayerDebugMode 1
-defaults write com.adobe.CSXS.10 PlayerDebugMode 1</code></pre>
-            <p>CEP拡張フォルダを作成:</p>
-            <pre><code>mkdir -p ~/Library/Application\ Support/Adobe/CEP/extensions/MCPBridgeCEP/CSXS</code></pre>
-            <p>運用者から受け取ったファイル（<strong>5つ</strong>）を以下の通りに配置：</p>
-            <div class="note" style="background:#fff7e6;border:1px solid #ffd591;padding:12px 16px;border-radius:6px;margin:12px 0;">
-                <pre style="margin:0;background:#2d3748;color:#e2e8f0;padding:12px;border-radius:4px;font-size:12px;overflow-x:auto;"><code>~/Library/Application Support/Adobe/CEP/extensions/MCPBridgeCEP/
-├─ index.html       ← ルート直下
-├─ CSInterface.js   ← ルート直下
-├─ bridge-cep.js    ← ルート直下
-├─ .debug           ← ルート直下（隠しファイル）
-└─ CSXS/
-    └─ manifest.xml ← <span style="color:#fbbf24;">manifest.xml だけ CSXS サブフォルダの中！</span></code></pre>
-                <p style="margin:8px 0 0 0;font-size:12px;color:#c00;"><strong>⚠️ 要注意:</strong> <code>manifest.xml</code> だけ <code>CSXS/</code> サブフォルダの中に入ります。他の4ファイルは <code>MCPBridgeCEP/</code> 直下に置いてください。</p>
-            </div>
-            <p>配置後、以下のコマンドで確認：</p>
-            <pre><code>ls -la ~/Library/Application\ Support/Adobe/CEP/extensions/MCPBridgeCEP/</code></pre>
-            <div class="success"><code>index.html</code>, <code>CSInterface.js</code>, <code>bridge-cep.js</code>, <code>.debug</code>, <code>CSXS</code> の5項目が表示されればOK</div>
-        </div>
-        <div id="win7" class="tab-content">
-            <p>CEPデバッグモードを有効化:</p>
-            <ol>
-                <li><code>Win+R</code> → <code>regedit</code> → Enter</li>
-                <li><code>HKEY_CURRENT_USER\Software\Adobe\CSXS.12</code> に<br><code>PlayerDebugMode</code> = <code>1</code> (文字列) を追加</li>
-            </ol>
-            <p>CEP拡張フォルダを作成し、運用者から受け取った5ファイルを配置：</p>
-            <pre><code>C:\Users\ユーザー名\AppData\Roaming\Adobe\CEP\extensions\MCPBridgeCEP\</code></pre>
-            <div class="note" style="background:#fff7e6;border:1px solid #ffd591;padding:12px 16px;border-radius:6px;margin:12px 0;">
-                <pre style="margin:0;background:#2d3748;color:#e2e8f0;padding:12px;border-radius:4px;font-size:12px;overflow-x:auto;"><code>MCPBridgeCEP\
-├─ index.html       ← ルート直下
-├─ CSInterface.js   ← ルート直下
-├─ bridge-cep.js    ← ルート直下
-├─ .debug           ← ルート直下（隠しファイル）
-└─ CSXS\
-    └─ manifest.xml ← <span style="color:#fbbf24;">manifest.xml だけ CSXS サブフォルダの中！</span></code></pre>
-                <p style="margin:8px 0 0 0;font-size:12px;color:#c00;"><strong>⚠️ 要注意:</strong> <code>manifest.xml</code> だけ <code>CSXS\</code> サブフォルダの中に入ります。</p>
-            </div>
-        </div>
-
-        <!-- Step 8 -->
-        <h2><span class="num">8</span>動作確認</h2>
-        <div class="card">
-            <h3>静止画くんの起動</h3>
-            <pre><code>cd ~/projects/cph
+<h2>4. 中継アプリを起動</h2>
+<pre><code>cd ~/projects/cph-relay
 npm run dev</code></pre>
-            <p>ブラウザで <a href="http://localhost:3000" target="_blank">http://localhost:3000</a> を開く</p>
-            <div class="success">ログイン画面が表示されればOK</div>
-        </div>
-        <div class="card">
-            <h3>Premiere Pro + CEP Bridge</h3>
-            <ol>
-                <li>Premiere Pro を起動</li>
-                <li>メニュー → <strong>ウィンドウ → エクステンション → MCP Bridge (CEP)</strong></li>
-                <li><strong>Start Bridge</strong> をクリック</li>
-            </ol>
-            <div class="success">緑ドット2つになればOK</div>
-        </div>
-        <div class="card">
-            <h3>動画生成テスト</h3>
-            <ol>
-                <li>ブラウザで <a href="http://localhost:3000/generate" target="_blank">localhost:3000/generate</a> を開く</li>
-                <li>.prproj のパスを入力してスキャン</li>
-                <li>シーケンス選択 → テキスト選択 → 年齢設定</li>
-                <li>生成開始 → mp4 が出力されれば完了!</li>
-            </ol>
-        </div>
+<p>起動すると、こんな表示が出る:</p>
+<pre><code>🎬 cph-relay — 静止画くん中継アプリ
 
-        <!-- Daily -->
-        <div class="daily">
-            <h3>毎日の起動手順（3ステップ）</h3>
-            <ol>
-                <li>ターミナル: <code>cd ~/projects/cph && npm run dev</code></li>
-                <li>ブラウザ: <a href="http://localhost:3000">http://localhost:3000</a> を開く</li>
-                <li>Premiere Pro 起動 → CEP Bridge で Start Bridge</li>
-            </ol>
-        </div>
+  このURLをブラウザで開いてください:
+    https://github.com/login/device
 
-        <!-- Troubleshooting -->
-        <h2>トラブルシューティング</h2>
-        <div class="trouble">
-            <details>
-                <summary>「サーバーに接続できない」</summary>
-                <div><code>npm run dev</code> が実行されているか確認してください。ターミナルが閉じていると停止します。</div>
-            </details>
-            <details>
-                <summary>「CEP Bridge タイムアウト」</summary>
-                <div>Premiere Pro が起動しているか、CEPパネルで <strong>Start Bridge</strong> が押されているか確認してください。</div>
-            </details>
-            <details>
-                <summary>「テキストが .prproj 内に見つかりませんでした」</summary>
-                <div>.prproj 内のテキストがスキャン結果と一致しているか確認。Premiere Pro で保存し直してから再スキャンしてみてください。</div>
-            </details>
-            <details>
-                <summary>「H.264プリセットが見つかりません」</summary>
-                <div>Premiere Pro 2024〜2027 がインストールされているか確認してください。</div>
-            </details>
-        </div>
+  コード:
+    ABCD-1234
 
-        <footer>
-            困ったら岩﨑（iwasaki@shibuya-ad.com）に連絡してください
-        </footer>
-    </div>
+  認証完了を待っています...</code></pre>
 
-    <script>
-        function switchTab(btn, contentId) {
-            const group = btn.parentElement;
-            group.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            btn.classList.add('active');
-            let sibling = group.nextElementSibling;
-            while (sibling && sibling.classList.contains('tab-content')) {
-                sibling.classList.remove('active');
-                sibling = sibling.nextElementSibling;
-            }
-            document.getElementById(contentId).classList.add('active');
-        }
-    </script>
+<h3>GitHub 認証手順</h3>
+<ol>
+  <li>ブラウザで <a href="https://github.com/login/device">https://github.com/login/device</a> を開く</li>
+  <li>ターミナルに表示された <strong>コード</strong>（例: <code>ABCD-1234</code>）を入力</li>
+  <li>GitHub にログイン（自分のアカウントで）</li>
+  <li>「Authorize」をクリック</li>
+</ol>
+<p>完了すると、ターミナルにこう出ます:</p>
+<pre><code>  ✅ 認証成功 (your-github-name)
+  🔗 https://cph-307299643469.asia-northeast1.run.app にポーリング開始</code></pre>
+<p><strong>この状態でターミナルを閉じない</strong>（閉じると中継アプリが止まる）。</p>
+
+<hr />
+
+<h2>5. Premiere Pro 側の設定</h2>
+<h3>MCPBridgeCEP 拡張を配置</h3>
+<p>運用者から受け取った <strong><code>MCPBridgeCEP</code> フォルダ</strong>を、以下に置く:</p>
+<pre><code>~/Library/Application Support/Adobe/CEP/extensions/MCPBridgeCEP/</code></pre>
+<p>ターミナルで:</p>
+<pre><code>mkdir -p ~/Library/Application\ Support/Adobe/CEP/extensions
+mv ~/Downloads/MCPBridgeCEP ~/Library/Application\ Support/Adobe/CEP/extensions/</code></pre>
+
+<h3>Premiere Pro を起動</h3>
+<ol>
+  <li>PPro を起動</li>
+  <li>メニュー: <strong>ウィンドウ → 機能拡張 → MCPBridgeCEP</strong></li>
+  <li>パネルが開いたら、<strong>「Start Bridge」ボタン</strong>をクリック</li>
+  <li>「Bridge running」表示が出れば OK</li>
+</ol>
+
+<hr />
+
+<h2>6. 動作確認</h2>
+<p>運用者に「<strong>接続できたか確認お願い</strong>」と伝える。<br />
+運用者側で <code>/settings → 中継アプリ</code> タブを開き、あなたの名前が <strong>「オンライン」</strong> になっていれば成功。</p>
+<p>その後、運用者がテスト発注を作って動画生成を実行。あなたの Mac の PPro が自動で動き、Drive に動画がアップロードされれば完璧。</p>
+
+<hr />
+
+<h2>7. 普段の使い方</h2>
+<h3>起動方法</h3>
+<p>Mac を再起動した後など、改めて中継アプリを起動するには:</p>
+<pre><code>cd ~/projects/cph-relay
+npm run dev</code></pre>
+<p>（一度認証が完了していれば、再認証不要）</p>
+
+<h3>終了方法</h3>
+<p>ターミナルで <strong>Ctrl + C</strong></p>
+
+<h3>通知</h3>
+<ul>
+  <li>PPro が立ち上がっていない時は動画生成できないので、作業中は PPro 起動しておく</li>
+  <li>Mac がスリープに入ると中継停止する → 業務時間中はスリープ無効推奨（システム設定 → ロック画面 → ディスプレイのオフを「しない」）</li>
+</ul>
+
+<hr />
+
+<h2>トラブルシュート</h2>
+
+<h3><code>npm install</code> が失敗する</h3>
+<ul>
+  <li><strong>node-canvas でエラー</strong>: <code>xcode-select --install</code> で Xcode Command Line Tools を入れてから再試行</li>
+  <li><strong>権限エラー</strong>: <code>sudo chown -R $(whoami) ~/.npm</code> を実行</li>
+</ul>
+
+<h3>GitHub 認証画面で「ユーザーが見つかりません」</h3>
+<p>→ <strong>運用者があなたの GitHub ユーザー名を cph に登録していない可能性</strong>。運用者に「GitHub ユーザー名 <code>xxxx</code> を登録してください」と伝える。</p>
+
+<h3>「CEP Bridge タイムアウト」エラー</h3>
+<ul>
+  <li>PPro が起動していない</li>
+  <li>MCPBridgeCEP パネルで「Start Bridge」を押し忘れ</li>
+  <li>→ PPro 起動 + Start Bridge をやり直す</li>
+</ul>
+
+<h3>Drive アップロードが失敗する</h3>
+<p>→ 出力先 Drive フォルダに<strong>サービスアカウントの権限が無い可能性</strong>。運用者に「Drive フォルダ共有してください」と伝える。</p>
+
+<h3>中継アプリが赤いエラーを出し続けている</h3>
+<p>→ ターミナルのエラーログを丸ごとコピーして運用者に送る。</p>
+
+<hr />
+
+<h2>連絡先</h2>
+<p>困ったら運用者に Slack/Chatwork で連絡。</p>
 </body>
 </html>
